@@ -15,7 +15,7 @@ export default function QuestionCard({
         Question: {questionNr}/{totalQuestions}
       </QuestionNr>
       <Question dangerouslySetInnerHTML={{ __html: question }}></Question>
-      <div>
+      <>
         {answers.map((answer) => (
           <Select key={answer}>
             <QuestionBtn
@@ -29,7 +29,7 @@ export default function QuestionCard({
             </QuestionBtn>
           </Select>
         ))}
-      </div>
+      </>
     </>
   );
 }

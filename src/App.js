@@ -14,6 +14,9 @@ export default function App() {
 
   const TOTAL_QUESTIONS = 5;
 
+  const [startTime, setStartTime] = useState("");
+  const [diff, setDiff] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [questions, setQuestions] = useState([questionState]);
   const [userAnswers, setUserAnswers] = useState([answerObject]);
@@ -28,7 +31,10 @@ export default function App() {
     setGameOver(false);
 
     const newQuestions = await QuizQuestion();
+
     const start = new Date();
+    setStartTime(start);
+
     setQuestions(newQuestions);
     setScore(0);
     setUserAnswers([]);
@@ -64,15 +70,17 @@ export default function App() {
 
     if (nextQ === TOTAL_QUESTIONS) {
       setGameOver(true);
+
+      const now = new Date();
+      const timeDiff = Math.floor(
+        (now.getTime() - startTime.getTime()) / 1000 / 24 / 60 / 60
+      );
+      setDiff(timeDiff);
     } else {
       setNumber(nextQ);
     }
   };
 
-  // const timeSet = ({start}) =>{
-  //   const now = new Date();
-  //   const timeSec = Math.floor((now.getTime() - {start}.getTime()) / 1000 / 60 );
-  // }
   return (
     <Section>
       <Title>Quiz App</Title>
@@ -102,9 +110,23 @@ export default function App() {
           <Score>정답: {score}개 </Score>
         ) : null}
         {userAnswers.length === TOTAL_QUESTIONS ? (
-          <WrongAs>오답: {5 - score}개 </WrongAs>
+          <WrongAns>오답: {5 - score}개 </WrongAns>
         ) : null}
+
+        {userAnswers.length === TOTAL_QUESTIONS ? console.log(diff) : null}
       </Result>
+
+      {userAnswers.length === TOTAL_QUESTIONS ? (
+        <Skill>
+          <SkillDescription>
+            <span>정답 {score * 20}%</span>
+            <span>오답 {(5 - score) * 20}%</span>
+          </SkillDescription>
+          <SkillProgressbar>
+            <He score={score} className="skillvalue"></He>
+          </SkillProgressbar>
+        </Skill>
+      ) : null}
 
       {gameOver ? (
         <StartBtn onClick={startTrivia}>Start</StartBtn>
@@ -143,17 +165,44 @@ const Result = styled.div`
 `;
 
 const Score = styled.p`
-  font-size: 24px;
+  font-size: 20px;
+  margin-bottom: 30px;
 `;
 
-const WrongAs = styled.p`
-  font-size: 24px;
+const WrongAns = styled.p`
+  font-size: 20px;
+  margin-bottom: 30px;
 `;
 
 const StartBtn = styled.button`
   border: none;
-  margin-top: 50px;
-  font-size: 16px;
+  margin-top: 20px;
+  font-size: 32px;
   background-color: #fff;
   cursor: pointer;
+`;
+
+const Skill = styled.div`
+  width: 100%;
+  margin-bottom: 32px;
+`;
+
+const SkillDescription = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const SkillProgressbar = styled.div`
+  border-radius: 5px;
+  height: 25px;
+  background-color: #616161;
+  width: 100%;
+`;
+
+const He = styled.div`
+  width: ${({ score }) => `${score * 20}%`};
+  height: 25px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  background-color: #feb546;
 `;
