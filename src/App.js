@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import QuestionCard from "./components/QuestionCard";
-import Questions from "./components/QuestionCard";
 import QuizQuestion from "./API";
 import { questionState } from "./API";
+import styled from "styled-components";
 
 export default function App() {
   const answerObject = {
@@ -12,7 +12,7 @@ export default function App() {
     correctAnswer: "",
   };
 
-  const TOTAL_QUESTIONS = 10;
+  const TOTAL_QUESTIONS = 5;
 
   const [loading, setLoading] = useState(false);
   const [questions, setQuestions] = useState([questionState]);
@@ -28,7 +28,7 @@ export default function App() {
     setGameOver(false);
 
     const newQuestions = await QuizQuestion();
-
+    const start = new Date();
     setQuestions(newQuestions);
     setScore(0);
     setUserAnswers([]);
@@ -69,15 +69,14 @@ export default function App() {
     }
   };
 
+  // const timeSet = ({start}) =>{
+  //   const now = new Date();
+  //   const timeSec = Math.floor((now.getTime() - {start}.getTime()) / 1000 / 60 );
+  // }
   return (
-    <div className="App">
-      <h1>Quiz App</h1>
-      {gameOver || userAnswers.length === TOTAL_QUESTIONS ? (
-        <button className="start" onClick={startTrivia}>
-          Start
-        </button>
-      ) : null}
-      {!gameOver ? <p className="score">Score: {score} </p> : null}
+    <Section>
+      <Title>Quiz App</Title>
+
       {loading && <p>Loading Questions ...</p>}
       {!loading && !gameOver && (
         <QuestionCard
@@ -93,10 +92,68 @@ export default function App() {
       !gameOver &&
       userAnswers.length === number + 1 &&
       number !== TOTAL_QUESTIONS - 1 ? (
-        <button className="next" onClick={nextQuestion}>
+        <NextBtn className="next" onClick={nextQuestion}>
           Next Question
-        </button>
+        </NextBtn>
       ) : null}
-    </div>
+
+      <Result>
+        {userAnswers.length === TOTAL_QUESTIONS ? (
+          <Score>정답: {score}개 </Score>
+        ) : null}
+        {userAnswers.length === TOTAL_QUESTIONS ? (
+          <WrongAs>오답: {5 - score}개 </WrongAs>
+        ) : null}
+      </Result>
+
+      {gameOver ? (
+        <StartBtn onClick={startTrivia}>Start</StartBtn>
+      ) : (
+        <StartBtn onClick={startTrivia}>ReStart</StartBtn>
+      )}
+    </Section>
   );
 }
+
+const Section = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 600px;
+  height: 100vh;
+`;
+
+const Title = styled.h1`
+  font-size: 24px;
+  color: black;
+`;
+
+const NextBtn = styled.button`
+  border: none;
+  margin-top: 20px;
+  font-size: 16px;
+  background-color: #fff;
+  cursor: pointer;
+`;
+
+const Result = styled.div`
+  width: 400px;
+  display: flex;
+  justify-content: space-evenly;
+`;
+
+const Score = styled.p`
+  font-size: 24px;
+`;
+
+const WrongAs = styled.p`
+  font-size: 24px;
+`;
+
+const StartBtn = styled.button`
+  border: none;
+  margin-top: 50px;
+  font-size: 16px;
+  background-color: #fff;
+  cursor: pointer;
+`;
