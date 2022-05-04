@@ -37,12 +37,19 @@ export default function QuestionCard({
 const QuestionNr = styled.p`
   margin: 20px;
   font-size: 48px;
+  @media only screen and (max-width: 768px) {
+    font-size: 32px;
+  }
 `;
 
 const Question = styled.p`
   width: 480px;
   font-size: 18px;
   text-align: center;
+  @media only screen and (max-width: 768px) {
+    width: 240px;
+    font-size: 15px;
+  }
 `;
 
 const Select = styled.div`
@@ -69,5 +76,8 @@ const QuestionBtn = styled.button`
   &:hover {
     transform: scale(1.1);
     transition: 0.2s ease-in-out;
+  }
+  @media only screen and (max-width: 768px) {
+    width: 240px;
   }
 `;

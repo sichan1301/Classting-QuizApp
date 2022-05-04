@@ -142,6 +142,9 @@ const Section = styled.div`
   align-items: center;
   width: 600px;
   height: 100vh;
+  @media only screen and (max-width: 768px) {
+    width: 400px;
+  }
 `;
 
 const Title = styled.h1`
@@ -159,23 +162,35 @@ const NextBtn = styled.button`
 
 const Result = styled.div`
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   width: 400px;
+  @media only screen and (max-width: 768px) {
+    width: 300px;
+  }
 `;
 
 const Score = styled.p`
   margin-bottom: 30px;
   font-size: 20px;
+  @media only screen and (max-width: 768px) {
+    font-size: 15px;
+  }
 `;
 
 const WrongAns = styled.p`
   margin-bottom: 30px;
   font-size: 20px;
+  @media only screen and (max-width: 768px) {
+    font-size: 15px;
+  }
 `;
 
 const Timee = styled.p`
   margin-bottom: 30px;
   font-size: 20px;
+  @media only screen and (max-width: 768px) {
+    font-size: 15px;
+  }
 `;
 
 const StartBtn = styled.button`
@@ -184,11 +199,18 @@ const StartBtn = styled.button`
   background-color: #fff;
   font-size: 32px;
   cursor: pointer;
+  @media only screen and (max-width: 768px) {
+    margin-top: 10px;
+    font-size: 16px;
+  }
 `;
 
 const Chart = styled.div`
   margin-bottom: 32px;
   width: 100%;
+  @media only screen and (max-width: 768px) {
+    width: 70%;
+  }
 `;
 
 const ProgressBarTxt = styled.div`
