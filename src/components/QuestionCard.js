@@ -1,5 +1,5 @@
 import React from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
 export default function QuestionCard({
   question,
@@ -35,13 +35,14 @@ export default function QuestionCard({
 }
 
 const QuestionNr = styled.p`
+  margin: 20px;
   font-size: 48px;
 `;
 
 const Question = styled.p`
+  width: 480px;
   font-size: 18px;
   text-align: center;
-  width: 480px;
 `;
 
 const Select = styled.div`
@@ -51,29 +52,22 @@ const Select = styled.div`
 `;
 
 const QuestionBtn = styled.button`
-  font-size: 16px;
-  outline: none;
-  background-color: #fff;
-  background: none;
   margin-top: 10px;
   width: 480px;
   height: 50px;
-  text-align: center;
+  outline: none;
   border: ${({ correct, userClicked }) =>
     correct
-      ? "2px solid blue"
+      ? "2px solid rgb(0, 41, 135)"
       : !correct && userClicked
-      ? `2px solid red`
+      ? `2px solid rgb(204, 0, 20)`
       : `1px solid black`};
+  background: none;
+  font-size: 16px;
+  text-align: center;
   cursor: pointer;
   &:hover {
     transform: scale(1.1);
     transition: 0.2s ease-in-out;
   }
-  /* background: ${({ correct, userClicked }) =>
-    correct
-      ? "linear-gradient(90deg, #56ffa4, #59bc86)"
-      : !correct && userClicked
-      ? `linear-gradient(90deg, #ff5656, #c16868)`
-      : `linear-gradient(90deg, #56ccff, #6eafb4)`}; */
 `;

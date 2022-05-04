@@ -1,5 +1,4 @@
 import axios from "axios";
-import { shuffleArray } from "./utils";
 
 const question = {
   category: "",
@@ -9,6 +8,8 @@ const question = {
   question: "",
   tyle: "",
 };
+
+const shuffleArray = (array) => [...array].sort(() => Math.random() - 0.5);
 
 export const questionState = question & { answers: "" };
 

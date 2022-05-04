@@ -1,25 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import QuestionCard from "./components/QuestionCard";
 import QuizQuestion from "./API";
 import { questionState } from "./API";
 import styled from "styled-components";
 
 export default function App() {
-  const answerObject = {
-    question: "",
-    answer: "",
-    correct: false,
-    correctAnswer: "",
-  };
-
   const TOTAL_QUESTIONS = 5;
 
   const [startTime, setStartTime] = useState("");
-  const [diff, setDiff] = useState("");
+  const [timeDiff, setTimeDiff] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [questions, setQuestions] = useState([questionState]);
-  const [userAnswers, setUserAnswers] = useState([answerObject]);
+  const [userAnswers, setUserAnswers] = useState([
+    {
+      question: "",
+      answer: "",
+      correct: false,
+      correctAnswer: "",
+    },
+  ]);
   const [number, setNumber] = useState(0);
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(true);
@@ -70,16 +70,20 @@ export default function App() {
 
     if (nextQ === TOTAL_QUESTIONS) {
       setGameOver(true);
-
-      const now = new Date();
-      const timeDiff = Math.floor(
-        (now.getTime() - startTime.getTime()) / 1000 / 24 / 60 / 60
-      );
-      setDiff(timeDiff);
     } else {
       setNumber(nextQ);
     }
   };
+
+  const time = () => {
+    const now = new Date();
+    const timeSec = Math.floor((now - startTime) / 1000);
+    setTimeDiff(timeSec);
+  };
+
+  useEffect(() => {
+    time();
+  }, [number]);
 
   return (
     <Section>
@@ -100,32 +104,27 @@ export default function App() {
       !gameOver &&
       userAnswers.length === number + 1 &&
       number !== TOTAL_QUESTIONS - 1 ? (
-        <NextBtn className="next" onClick={nextQuestion}>
-          Next Question
-        </NextBtn>
+        <NextBtn onClick={nextQuestion}>Next Question</NextBtn>
       ) : null}
 
-      <Result>
-        {userAnswers.length === TOTAL_QUESTIONS ? (
+      {userAnswers.length === TOTAL_QUESTIONS ? (
+        <Result>
           <Score>정답: {score}개 </Score>
-        ) : null}
-        {userAnswers.length === TOTAL_QUESTIONS ? (
           <WrongAns>오답: {5 - score}개 </WrongAns>
-        ) : null}
-
-        {userAnswers.length === TOTAL_QUESTIONS ? console.log(diff) : null}
-      </Result>
+          <Timee>소요시간 : {timeDiff}초</Timee>
+        </Result>
+      ) : null}
 
       {userAnswers.length === TOTAL_QUESTIONS ? (
-        <Skill>
-          <SkillDescription>
+        <Chart>
+          <ProgressBarTxt>
             <span>정답 {score * 20}%</span>
             <span>오답 {(5 - score) * 20}%</span>
-          </SkillDescription>
-          <SkillProgressbar>
-            <He score={score} className="skillvalue"></He>
-          </SkillProgressbar>
-        </Skill>
+          </ProgressBarTxt>
+          <ProgressBar>
+            <ScoreProgressBar score={score} />
+          </ProgressBar>
+        </Chart>
       ) : null}
 
       {gameOver ? (
@@ -146,63 +145,68 @@ const Section = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 24px;
   color: black;
+  font-size: 24px;
 `;
 
 const NextBtn = styled.button`
-  border: none;
   margin-top: 20px;
-  font-size: 16px;
+  border: none;
   background-color: #fff;
+  font-size: 16px;
   cursor: pointer;
 `;
 
 const Result = styled.div`
-  width: 400px;
   display: flex;
   justify-content: space-evenly;
+  width: 400px;
 `;
 
 const Score = styled.p`
-  font-size: 20px;
   margin-bottom: 30px;
+  font-size: 20px;
 `;
 
 const WrongAns = styled.p`
-  font-size: 20px;
   margin-bottom: 30px;
+  font-size: 20px;
+`;
+
+const Timee = styled.p`
+  margin-bottom: 30px;
+  font-size: 20px;
 `;
 
 const StartBtn = styled.button`
+  margin-top: 30px;
   border: none;
-  margin-top: 20px;
-  font-size: 32px;
   background-color: #fff;
+  font-size: 32px;
   cursor: pointer;
 `;
 
-const Skill = styled.div`
-  width: 100%;
+const Chart = styled.div`
   margin-bottom: 32px;
+  width: 100%;
 `;
 
-const SkillDescription = styled.div`
+const ProgressBarTxt = styled.div`
   display: flex;
   justify-content: space-between;
 `;
 
-const SkillProgressbar = styled.div`
-  border-radius: 5px;
-  height: 25px;
-  background-color: #616161;
+const ProgressBar = styled.div`
   width: 100%;
+  height: 25px;
+  border-radius: 5px;
+  background-color: rgb(222, 93, 98);
 `;
 
-const He = styled.div`
+const ScoreProgressBar = styled.div`
   width: ${({ score }) => `${score * 20}%`};
   height: 25px;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
-  background-color: #feb546;
+  background-color: rgb(74, 140, 255);
 `;
