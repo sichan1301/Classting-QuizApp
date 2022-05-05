@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import QuestionCard from "./components/QuestionCard";
-import QuizQuestion from "./API";
-import { questionState } from "./API";
+import QuizQuestion, { questionState } from "./API";
 import styled from "styled-components";
 
 export default function App() {
-  const TOTAL_QUESTIONS = 5;
+  const TOTAL_QUESTIONS = 10;
 
   const [startTime, setStartTime] = useState("");
   const [timeDiff, setTimeDiff] = useState("");
@@ -26,12 +25,13 @@ export default function App() {
 
   // console.log(questions);
 
-  const startTrivia = async () => {
+  const startQuiz = async () => {
     setLoading(true);
     setGameOver(false);
 
-    const newQuestions = await QuizQuestion();
+    const newQuestions = await QuizQuestion(TOTAL_QUESTIONS);
 
+    // Start 클릭시의 시점
     const start = new Date();
     setStartTime(start);
 
@@ -60,6 +60,7 @@ export default function App() {
         correct,
         correctAnswer: questions[number].correct_answer,
       };
+      // console.log(answerObject);
       setUserAnswers((prev) => [...prev, answerObject]);
     }
   };
@@ -75,6 +76,7 @@ export default function App() {
     }
   };
 
+  // 마지막 next question 클릭시까지 걸린 소요시간
   const time = () => {
     const now = new Date();
     const timeSec = Math.floor((now - startTime) / 1000);
@@ -90,6 +92,7 @@ export default function App() {
       <Title>Quiz App</Title>
 
       {loading && <p>Loading Questions ...</p>}
+
       {!loading && !gameOver && (
         <QuestionCard
           questionNr={number + 1}
@@ -110,7 +113,7 @@ export default function App() {
       {userAnswers.length === TOTAL_QUESTIONS ? (
         <Result>
           <Score>정답: {score}개 </Score>
-          <WrongAns>오답: {5 - score}개 </WrongAns>
+          <WrongAns>오답: {TOTAL_QUESTIONS - score}개 </WrongAns>
           <Timee>소요시간 : {timeDiff}초</Timee>
         </Result>
       ) : null}
@@ -118,19 +121,22 @@ export default function App() {
       {userAnswers.length === TOTAL_QUESTIONS ? (
         <Chart>
           <ProgressBarTxt>
-            <span>정답 {score * 20}%</span>
-            <span>오답 {(5 - score) * 20}%</span>
+            <span>정답 {parseInt((score / TOTAL_QUESTIONS) * 100)}%</span>
+            <span>
+              오답{" "}
+              {parseInt(((TOTAL_QUESTIONS - score) / TOTAL_QUESTIONS) * 100)}%
+            </span>
           </ProgressBarTxt>
           <ProgressBar>
-            <ScoreProgressBar score={score} />
+            <ScoreProgressBar score={score} TOTAL_QUESTIONS={TOTAL_QUESTIONS} />
           </ProgressBar>
         </Chart>
       ) : null}
 
       {gameOver ? (
-        <StartBtn onClick={startTrivia}>Start</StartBtn>
+        <StartBtn onClick={startQuiz}>Start</StartBtn>
       ) : (
-        <StartBtn onClick={startTrivia}>ReStart</StartBtn>
+        <StartBtn onClick={startQuiz}>ReStart</StartBtn>
       )}
     </Section>
   );
@@ -200,14 +206,14 @@ const StartBtn = styled.button`
   font-size: 32px;
   cursor: pointer;
   @media only screen and (max-width: 768px) {
-    margin-top: 10px;
-    font-size: 16px;
+    margin-top: 20px;
+    font-size: 24px;
   }
 `;
 
 const Chart = styled.div`
   margin-bottom: 32px;
-  width: 100%;
+  width: 500px;
   @media only screen and (max-width: 768px) {
     width: 70%;
   }
@@ -226,7 +232,8 @@ const ProgressBar = styled.div`
 `;
 
 const ScoreProgressBar = styled.div`
-  width: ${({ score }) => `${score * 20}%`};
+  width: ${({ score, TOTAL_QUESTIONS }) =>
+    `${(score / TOTAL_QUESTIONS) * 100}%`};
   height: 25px;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;

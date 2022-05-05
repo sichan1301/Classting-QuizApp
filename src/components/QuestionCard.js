@@ -15,21 +15,20 @@ export default function QuestionCard({
         Question: {questionNr}/{totalQuestions}
       </QuestionNr>
       <Question dangerouslySetInnerHTML={{ __html: question }}></Question>
-      <>
-        {answers.map((answer) => (
-          <Select key={answer}>
-            <QuestionBtn
-              correct={userAnswer?.correctAnswer === answer}
-              userClicked={userAnswer?.answer === answer}
-              disabled={userAnswer ? true : false}
-              value={answer}
-              onClick={callback}
-            >
-              <span dangerouslySetInnerHTML={{ __html: answer }} />
-            </QuestionBtn>
-          </Select>
-        ))}
-      </>
+
+      {answers.map((answer) => (
+        <Select key={answer}>
+          <QuestionBtn
+            correct={userAnswer?.correctAnswer === answer}
+            userClicked={userAnswer?.answer === answer}
+            disabled={userAnswer ? true : false}
+            value={answer}
+            onClick={callback}
+          >
+            <span dangerouslySetInnerHTML={{ __html: answer }} />
+          </QuestionBtn>
+        </Select>
+      ))}
     </>
   );
 }

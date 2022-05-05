@@ -13,9 +13,9 @@ const shuffleArray = (array) => [...array].sort(() => Math.random() - 0.5);
 
 export const questionState = question & { answers: "" };
 
-const QuizQuestion = async () => {
+const QuizQuestion = async (amount) => {
   const res = await axios.get(
-    "https://opentdb.com/api.php?amount=5&type=multiple"
+    `https://opentdb.com/api.php?amount=${amount}&type=multiple`
   );
   // console.log(res.data.results);
   return res.data.results.map((question) => ({
